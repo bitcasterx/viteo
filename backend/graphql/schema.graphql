@@ -1,0 +1,43 @@
+"A datetime string with format `Y-m-d H:i:s`, e.g. `2018-05-23 13:43:32`."
+scalar DateTime @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTime")
+
+"File upload scalar for multipart requests."
+scalar Upload @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Upload")
+
+"Status of video conversion task."
+enum VideoConversionTaskStatus {
+    queued
+    processing
+    completed
+    failed
+}
+
+"Video conversion task type."
+type VideoConversionTask {
+    "Unique task identifier (UUID)."
+    id: ID!
+    "Current status."
+    status: VideoConversionTaskStatus!
+    "Progress from 0 to 100."
+    progress: Int!
+    "Download URL when completed."
+    downloadUrl: String
+    "Error message when failed."
+    errorMessage: String
+    "Task creation timestamp."
+    createdAt: DateTime!
+    "Task last update timestamp."
+    updatedAt: DateTime!
+}
+
+type Query {
+    "Get video conversion task by ID."
+    videoConversionTask(id: ID! @rules(apply: ["required", "uuid"])): VideoConversionTask
+        @field(resolver: "App\\GraphQL\\Queries\\VideoConversionTaskQuery")
+}
+
+type Mutation {
+    "Upload video and create conversion task."
+    uploadVideo(video: Upload! @rules(apply: ["required", "file", "mimes:mp4,mov,avi,mkv,wmv,webm", "max:2048000"])): VideoConversionTask!
+        @field(resolver: "App\\GraphQL\\Mutations\\UploadVideoMutation")
+}

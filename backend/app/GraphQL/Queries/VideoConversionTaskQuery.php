@@ -16,6 +16,9 @@ final readonly class VideoConversionTaskQuery
     ) {
     }
 
+    /**
+     * @param  array<string, mixed>  $args
+     */
     public function __invoke(mixed $_root, array $args): ?VideoConversionTaskData
     {
         $task = $this->repository->findById($args['id']);

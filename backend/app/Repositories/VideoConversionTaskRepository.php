@@ -9,6 +9,9 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class VideoConversionTaskRepository
 {
+    /**
+     * @param  array<string, mixed>  $data
+     */
     public function create(array $data): VideoConversionTask
     {
         return VideoConversionTask::query()->create($data);
@@ -48,6 +51,9 @@ class VideoConversionTaskRepository
         return $task->update($data);
     }
 
+    /**
+     * @return LengthAwarePaginator<int, VideoConversionTask>
+     */
     public function paginate(int $perPage = 15): LengthAwarePaginator
     {
         return VideoConversionTask::query()

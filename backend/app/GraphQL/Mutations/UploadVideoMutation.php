@@ -18,6 +18,9 @@ final readonly class UploadVideoMutation
     ) {
     }
 
+    /**
+     * @param  array<string, mixed>  $args
+     */
     public function __invoke(mixed $_root, array $args): VideoConversionTaskData
     {
         /** @var UploadedFile $file */

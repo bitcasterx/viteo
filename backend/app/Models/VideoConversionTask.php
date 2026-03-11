@@ -4,9 +4,14 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ */
 class VideoConversionTask extends Model
 {
     use HasUuids;

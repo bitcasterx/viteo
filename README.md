@@ -215,6 +215,15 @@ cd backend
 composer cs-fix
 ```
 
+## Статический анализ
+
+```bash
+cd backend
+composer phpstan
+```
+
+Используются PHPStan и Larastan (уровень 8). Конфигурация — `phpstan.neon.dist`.
+
 ## Масштабирование
 
 Для горизонтального масштабирования:

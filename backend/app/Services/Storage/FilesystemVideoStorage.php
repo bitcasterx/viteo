@@ -36,7 +36,8 @@ final class FilesystemVideoStorage implements VideoStorageInterface
             return $disk->path($storedPath);
         }
 
-        $tempPath = storage_path('app/temp/'.basename($storedPath));
+        $uniqueKey = md5($storedPath).'_'.uniqid('', true);
+        $tempPath = storage_path('app/temp/'.$uniqueKey);
         $directory = dirname($tempPath);
 
         if (! is_dir($directory)) {
@@ -66,7 +67,7 @@ final class FilesystemVideoStorage implements VideoStorageInterface
         $stream = fopen($localPath, 'r');
 
         if ($stream === false) {
-            throw new RuntimeException(sprintf('Cannot open local file: %s', $localPath));
+            throw new RuntimeException(__('messages.video.cannot_open_local', ['path' => $localPath]));
         }
 
         try {

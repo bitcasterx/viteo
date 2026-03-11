@@ -28,10 +28,12 @@ class VideoConversionService
     {
         $inputPath = $this->storage->getReadablePath($task->input_path);
 
+        $timeout = config('video.conversion.timeout_seconds', 3600);
+
         try {
             if (! file_exists($inputPath)) {
                 throw new RuntimeException(
-                    sprintf('Input file not found: %s', $task->input_path)
+                    __('messages.video.input_file_not_found', ['path' => $task->input_path])
                 );
             }
 
@@ -43,18 +45,18 @@ class VideoConversionService
                 '-y',
                 '-i', $inputPath,
                 '-vf', sprintf('scale=-2:%d', self::MAX_HEIGHT),
-            '-c:v', self::OUTPUT_CODEC,
-            '-preset', 'medium',
-            '-crf', '23',
-            '-movflags', '+faststart',
-            '-c:a', self::OUTPUT_AUDIO_CODEC,
-            '-b:a', '128k',
-            '-ac', '2',
-            $tempOutputPath,
-        ];
+                '-c:v', self::OUTPUT_CODEC,
+                '-preset', 'medium',
+                '-crf', '23',
+                '-movflags', '+faststart',
+                '-c:a', self::OUTPUT_AUDIO_CODEC,
+                '-b:a', '128k',
+                '-ac', '2',
+                $tempOutputPath,
+            ];
 
             $process = new Process($command);
-            $process->setTimeout(3600);
+            $process->setTimeout($timeout);
             $process->run();
 
             if (! $process->isSuccessful()) {
@@ -63,10 +65,7 @@ class VideoConversionService
                 }
 
                 throw new RuntimeException(
-                    sprintf(
-                        'FFmpeg conversion failed: %s',
-                        $process->getErrorOutput()
-                    )
+                    __('messages.video.conversion_failed', ['error' => $process->getErrorOutput()])
                 );
             }
 

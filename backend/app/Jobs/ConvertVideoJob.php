@@ -25,11 +25,14 @@ class ConvertVideoJob implements ShouldQueue
 
     public int $backoff = 60;
 
-    public int $timeout = 3600;
-
     public function __construct(
         private readonly string $taskId
     ) {
+    }
+
+    public function timeout(): int
+    {
+        return config('video.conversion.timeout_seconds', 3600);
     }
 
     public function handle(
@@ -71,8 +74,6 @@ class ConvertVideoJob implements ShouldQueue
                 null,
                 $e->getMessage()
             );
-
-            throw $e;
         }
     }
 

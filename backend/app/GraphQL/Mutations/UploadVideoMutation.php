@@ -6,7 +6,7 @@ namespace App\GraphQL\Mutations;
 
 use App\DTOs\VideoConversionTaskData;
 use App\Jobs\ConvertVideoJob;
-use App\Services\VideoConversionService;
+use App\Services\VideoConversionTaskMapper;
 use App\Services\VideoUploadService;
 use Illuminate\Http\UploadedFile;
 
@@ -14,7 +14,7 @@ final readonly class UploadVideoMutation
 {
     public function __construct(
         private VideoUploadService $uploadService,
-        private VideoConversionService $conversionService
+        private VideoConversionTaskMapper $taskMapper
     ) {
     }
 
@@ -27,20 +27,6 @@ final readonly class UploadVideoMutation
 
         ConvertVideoJob::dispatch($task->id)->onQueue('video-conversion');
 
-        $downloadUrl = null;
-
-        if ($task->output_path !== null) {
-            $downloadUrl = $this->conversionService->getDownloadUrl($task->output_path);
-        }
-
-        return new VideoConversionTaskData(
-            id: $task->id,
-            status: $task->status,
-            progress: $task->progress,
-            downloadUrl: $downloadUrl,
-            errorMessage: $task->error_message,
-            createdAt: $task->created_at,
-            updatedAt: $task->updated_at,
-        );
+        return $this->taskMapper->toDto($task);
     }
 }

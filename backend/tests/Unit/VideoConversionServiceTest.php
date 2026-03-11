@@ -8,6 +8,7 @@ use App\Models\VideoConversionTask;
 use App\Services\VideoConversionService;
 use Illuminate\Support\Facades\Storage;
 use PHPUnit\Framework\Attributes\Test;
+use RuntimeException;
 use Tests\TestCase;
 
 class VideoConversionServiceTest extends TestCase
@@ -48,12 +49,12 @@ class VideoConversionServiceTest extends TestCase
     public function convert_throws_when_input_file_not_found(): void
     {
         $task = new VideoConversionTask([
-            'id' => '550e8400-e29b-41d4-a716-446655440000',
+            'id'         => '550e8400-e29b-41d4-a716-446655440000',
             'input_path' => 'uploads/non_existent.mp4',
         ]);
         $task->exists = true;
 
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Input file not found');
 
         $this->service->convert($task);

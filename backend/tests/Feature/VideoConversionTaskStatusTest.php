@@ -16,8 +16,8 @@ class VideoConversionTaskStatusTest extends TestCase
     {
         $task = VideoConversionTask::query()->create([
             'input_path' => 'uploads/test.mp4',
-            'status' => VideoConversionTask::STATUS_PROCESSING,
-            'progress' => 50,
+            'status'     => VideoConversionTask::STATUS_PROCESSING,
+            'progress'   => 50,
         ]);
 
         $response = $this->graphQL(

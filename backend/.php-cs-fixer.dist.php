@@ -14,6 +14,11 @@ $rules = [
     'encoding' => true,
     'full_opening_tag' => true,
     'fully_qualified_strict_types' => true,
+    'global_namespace_import' => [
+        'import_classes' => true,
+        'import_constants' => true,
+        'import_functions' => true,
+    ],
     'function_declaration' => true,
     'heredoc_to_nowdoc' => true,
     'include' => true,
@@ -90,10 +95,10 @@ $rules = [
     'trailing_comma_in_multiline' => ['elements' => ['arrays']],
     'binary_operator_spaces' => [
         'default' => 'single_space',
-        'operators' => ['=>' => null],
+        'operators' => ['=>' => 'align_single_space_minimal'],
     ],
     'blank_line_before_statement' => [
-        'statements' => ['return', 'throw', 'try'],
+        'statements' => ['case', 'default', 'do', 'for', 'foreach', 'if', 'return', 'switch', 'throw', 'try', 'while'],
     ],
     'class_attributes_separation' => [
         'elements' => [

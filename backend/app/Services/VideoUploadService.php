@@ -23,12 +23,12 @@ class VideoUploadService
 
         $task = $this->repository->create([
             'input_path' => $path,
-            'status' => VideoConversionTask::STATUS_QUEUED,
-            'progress' => 0,
-            'metadata' => [
+            'status'     => VideoConversionTask::STATUS_QUEUED,
+            'progress'   => 0,
+            'metadata'   => [
                 'original_name' => $file->getClientOriginalName(),
-                'mime_type' => $file->getMimeType(),
-                'size' => $file->getSize(),
+                'mime_type'     => $file->getMimeType(),
+                'size'          => $file->getSize(),
             ],
         ]);
 

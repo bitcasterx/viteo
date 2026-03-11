@@ -9,6 +9,7 @@ use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use League\Flysystem\Local\LocalFilesystemAdapter;
+use RuntimeException;
 
 final class FilesystemVideoStorage implements VideoStorageInterface
 {
@@ -37,10 +38,12 @@ final class FilesystemVideoStorage implements VideoStorageInterface
 
         $tempPath = storage_path('app/temp/'.basename($storedPath));
         $directory = dirname($tempPath);
+
         if (! is_dir($directory)) {
             mkdir($directory, 0755, true);
         }
         $contents = $disk->get($storedPath);
+
         if ($contents !== null) {
             file_put_contents($tempPath, $contents);
         }
@@ -51,6 +54,7 @@ final class FilesystemVideoStorage implements VideoStorageInterface
     public function releaseReadablePath(string $localPath): void
     {
         $tempDir = storage_path('app/temp');
+
         if (str_starts_with(realpath($localPath) ?: $localPath, $tempDir) && file_exists($localPath)) {
             @unlink($localPath);
         }
@@ -60,8 +64,9 @@ final class FilesystemVideoStorage implements VideoStorageInterface
     {
         $disk = Storage::disk($this->convertedDisk);
         $stream = fopen($localPath, 'r');
+
         if ($stream === false) {
-            throw new \RuntimeException(sprintf('Cannot open local file: %s', $localPath));
+            throw new RuntimeException(sprintf('Cannot open local file: %s', $localPath));
         }
 
         try {

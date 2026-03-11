@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\GraphQL\Queries;
 
+use App\DTOs\VideoConversionTaskData;
+use App\Models\VideoConversionTask;
 use App\Repositories\VideoConversionTaskRepository;
 use App\Services\VideoConversionService;
 
@@ -15,7 +17,7 @@ final readonly class VideoConversionTaskQuery
     ) {
     }
 
-    public function __invoke(mixed $root, array $args): ?object
+    public function __invoke(mixed $_root, array $args): ?VideoConversionTaskData
     {
         $task = $this->repository->findById($args['id']);
 
@@ -23,24 +25,25 @@ final readonly class VideoConversionTaskQuery
             return null;
         }
 
-        return $this->mapToGraphQL($task);
+        return $this->mapToDto($task);
     }
 
-    private function mapToGraphQL(\App\Models\VideoConversionTask $task): object
+    private function mapToDto(VideoConversionTask $task): VideoConversionTaskData
     {
         $downloadUrl = null;
+
         if ($task->isCompleted() && $task->output_path !== null) {
             $downloadUrl = $this->conversionService->getDownloadUrl($task->output_path);
         }
 
-        return (object) [
-            'id' => $task->id,
-            'status' => $task->status,
-            'progress' => $task->progress,
-            'downloadUrl' => $downloadUrl,
-            'errorMessage' => $task->error_message,
-            'createdAt' => $task->created_at,
-            'updatedAt' => $task->updated_at,
-        ];
+        return new VideoConversionTaskData(
+            id: $task->id,
+            status: $task->status,
+            progress: $task->progress,
+            downloadUrl: $downloadUrl,
+            errorMessage: $task->error_message,
+            createdAt: $task->created_at,
+            updatedAt: $task->updated_at,
+        );
     }
 }

@@ -6,6 +6,7 @@ namespace App\Services;
 
 use App\Contracts\VideoStorageInterface;
 use App\Models\VideoConversionTask;
+use RuntimeException;
 use Symfony\Component\Process\Process;
 
 class VideoConversionService
@@ -29,7 +30,7 @@ class VideoConversionService
 
         try {
             if (! file_exists($inputPath)) {
-                throw new \RuntimeException(
+                throw new RuntimeException(
                     sprintf('Input file not found: %s', $task->input_path)
                 );
             }
@@ -61,7 +62,7 @@ class VideoConversionService
                     @unlink($tempOutputPath);
                 }
 
-                throw new \RuntimeException(
+                throw new RuntimeException(
                     sprintf(
                         'FFmpeg conversion failed: %s',
                         $process->getErrorOutput()
